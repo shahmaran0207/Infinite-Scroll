@@ -16,10 +16,16 @@ const useGetTopRatedMovies =()=>{
         queryKey:['top-rated-movie'],
         queryFn:({pageParam})=>{
             return fetchTopRatedMovies(pageParam)
-        }
+        },
 
         getNextPageParam:(last)=>{
-            if(last.page<)
-        }
+            if(last.page<last.total_pages) return last.page+1;
+
+            return undefined;
+        },
+
+        initialPageParam:1,
     })
 }
+
+export default useGetTopRatedMovies;
