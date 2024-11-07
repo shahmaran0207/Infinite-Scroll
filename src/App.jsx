@@ -2,6 +2,8 @@ import './App.css';
 import styled from 'styled-components';
 import Grid from '@mui/material/Grid';
 import useGetTopRatedMovies from './hooks/useGetTopRatedMovies.js';
+import {useInView} from "react-intersection-observer";
+import {useEffect} from "react";
 
 const MovieContainer = styled(Grid)({
     display: 'flex',
@@ -37,6 +39,15 @@ function App() {
     const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
         useGetTopRatedMovies();
 
+    const {ref, inView} = useInView();
+
+    useEffect(() => {
+        if(inView && hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+
+    }, [inView]);
+
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Something went wrong: {error.message}</p>;
 
@@ -57,6 +68,9 @@ function App() {
                     ))
                 )}
             </Grid>
+
+            <h1 ref={ref}>Load more...</h1>
+
         </div>
     );
 }
